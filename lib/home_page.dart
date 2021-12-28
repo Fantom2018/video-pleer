@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
+import 'package:get/get.dart';
+import 'package:video_player_getx/video_praxis_info.dart';
 import 'colors.dart' as color;
 
 class HomePage extends StatefulWidget {
@@ -75,10 +77,15 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(fontSize: 12, color: color.AppColor.homePageDetail),
                   ),
                   const SizedBox(width: 20.0),
-                  Icon(
-                    Icons.arrow_forward,
-                    size: 20,
-                    color: color.AppColor.homePageIcons,
+                  InkWell(
+                    onTap: (){
+                      Get.to(() =>VideoInfo());
+                    },
+                    child: Icon(
+                      Icons.arrow_forward,
+                      size: 20,
+                      color: color.AppColor.homePageIcons,
+                    ),
                   ),
                 ],
               ),
