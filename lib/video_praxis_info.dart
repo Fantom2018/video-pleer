@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -13,11 +12,11 @@ class VideoInfo extends StatefulWidget {
 }
 
 class _VideoInfoState extends State<VideoInfo> {
-  List info =[];
+  List videoInfo =[];
 
-  _initData (){
-    DefaultAssetBundle.of(context).loadString("json/videoinfo.json").then((value){
-      info = json.decode(value);
+  _initData ()async{
+    await DefaultAssetBundle.of(context).loadString("json/videoinfo.json").then((value){
+      videoInfo = json.decode(value);
     });
   }
 
@@ -49,6 +48,7 @@ class _VideoInfoState extends State<VideoInfo> {
                 width: MediaQuery.of(context).size.width,
                 height: 180,
                 child: Column(
+
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -75,12 +75,12 @@ class _VideoInfoState extends State<VideoInfo> {
                         color: color.AppColor.homePageContainerTextSmall,
                       ),
                     ),
-                    SizedBox(height: 4.0),
+                    const SizedBox(height: 4.0),
                     Text('and Gluteal Workout',
                       style: TextStyle(fontSize: 25,
                         color: color.AppColor.homePageContainerTextSmall,
                       ),),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Row(
                       children: [
                         Row(
@@ -158,35 +158,50 @@ class _VideoInfoState extends State<VideoInfo> {
               ),
 
             ),
-            Expanded(
+           Expanded(
               child:
               Container(
-                padding: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0),
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(topRight: Radius.circular(60)),
                 ),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: [
-                        Text('Circuit 1: Legs Toning',
-                        style: TextStyle(
-                          fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: color.AppColor.circuitsColor
-                        ),),
-                        Expanded(child: Container()),
-                        Icon(Icons.loop, color: color.AppColor.loopColor,),
-                        const SizedBox(width: 10.0),
-                        Text('3 sets',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: color.AppColor.setsColor
-                            ))
-                      ],
-                    )
+                     Row(
+                        children: [
+                          Text('Circuit 1: Legs Toning',
+                          style: TextStyle(
+                            fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: color.AppColor.circuitsColor
+                          ),),
+                          Expanded(child: Container()),
+                          Icon(Icons.loop, color: color.AppColor.loopColor,),
+                          const SizedBox(width: 10.0),
+                          Text('3 sets',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: color.AppColor.setsColor
+                              )),
+                        ],
+
+                      ),
+                    const SizedBox(height: 10.0),
+
+                    Expanded(child: ListView.builder(
+                        itemCount: videoInfo.length,
+                        itemBuilder: (_, int index){
+                      return GestureDetector(
+                        onTap: (){
+                          debugPrint(index.toString());
+                        },
+                        child: _listView(index),
+                      );
+                    }))
+
                   ],
                 ),
               )
@@ -194,5 +209,97 @@ class _VideoInfoState extends State<VideoInfo> {
           ],
         ),
       ));
+  }
+  _listView(int index){
+    return  Container(
+      height: 120,
+      width: 200,
+      color: Colors.white70,
+      margin: EdgeInsets.only(bottom: 3.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    image: DecorationImage(
+                        image: AssetImage(
+                            videoInfo[index]["thumbnail"]
+                        ),
+                        fit: BoxFit.cover
+                    )
+                ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    videoInfo[index]['title'],
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    videoInfo[index]['time'],
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300
+                    ),
+                  )],
+              )
+
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+
+                width: 80,
+                height: 20,
+                decoration: BoxDecoration(
+                    color: Color(0xffe1e7fb),
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: const Center(
+                  child: Text(
+                    //videoInfo[index]['time'],
+                    '15 sec rest',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400
+                    ),
+                  ),
+                ),
+
+              ),
+              SizedBox(width: 5.0),
+              Row(
+                children: [
+                  Container(
+                    //width:3,
+                    height: 20,
+                    child: Text(
+                        '- - - - - - - - - - - - - - - - - - -'
+                    ),
+                    /* decoration: BoxDecoration(
+                                            color: Colors.red,
+                                          borderRadius: BorderRadius.circular(3),
+                                        ),*/
+                  )
+                ],
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
