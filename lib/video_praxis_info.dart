@@ -13,10 +13,13 @@ class VideoInfo extends StatefulWidget {
 
 class _VideoInfoState extends State<VideoInfo> {
   List videoInfo =[];
+  bool _playArea = false;
 
   _initData ()async{
     await DefaultAssetBundle.of(context).loadString("json/videoinfo.json").then((value){
-      videoInfo = json.decode(value);
+      setState(() {
+        videoInfo = json.decode(value);
+      });
     });
   }
 
@@ -43,7 +46,8 @@ class _VideoInfoState extends State<VideoInfo> {
         child: Column(
           children: [
             SafeArea(
-              child: Container(
+              child:
+              Container(
                 padding: const EdgeInsets.only(top: 5.0, left: 20.0, right: 20.0),
                 width: MediaQuery.of(context).size.width,
                 height: 180,
@@ -69,6 +73,7 @@ class _VideoInfoState extends State<VideoInfo> {
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 20.0),
                     Text('Legs Toning',
                       style: TextStyle(fontSize: 25,
@@ -191,16 +196,8 @@ class _VideoInfoState extends State<VideoInfo> {
                       ),
                     const SizedBox(height: 10.0),
 
-                    Expanded(child: ListView.builder(
-                        itemCount: videoInfo.length,
-                        itemBuilder: (_, int index){
-                      return GestureDetector(
-                        onTap: (){
-                          debugPrint(index.toString());
-                        },
-                        child: _listView(index),
-                      );
-                    }))
+                    Expanded(
+                        child: _listView(),)
 
                   ],
                 ),
@@ -210,7 +207,26 @@ class _VideoInfoState extends State<VideoInfo> {
         ),
       ));
   }
-  _listView(int index){
+  _listView(){
+    return  ListView.builder(
+        itemCount: videoInfo.length,
+        itemBuilder: (_, int index){
+          return GestureDetector(
+            onTap: (){
+              debugPrint(index.toString());
+              setState(() {
+                if (_playArea ==false){
+                  _playArea =true;
+                }
+                //info = json.decode(value);
+              });
+            },
+            child: _buildCard(index),
+          );
+        }) ;
+  }
+
+  _buildCard(int index){
     return  Container(
       height: 120,
       width: 200,
